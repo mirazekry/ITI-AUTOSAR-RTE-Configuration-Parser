@@ -158,7 +158,10 @@ class BaseParser:
                         ItemName = subItem.text
                     if subItem.tag == arxmlfileNameSpace+SubItemsTag:
                         for numberofSubItems in subItem:
-                            count += 1
+                            if numberofSubItems.tag == Tag.inputShortName:
+                                pass
+                            else:
+                                count += 1
                 NumberOfSubItems[ItemName]=count
                 count = 0
         return NumberOfSubItems

@@ -35,6 +35,7 @@ class Tag:
     '''Interfacing packages Tags'''
     inputSenderRecieverInterface     = 'SENDER-RECEIVER-INTERFACE'
     inputSRDataElement               = 'VARIABLE-DATA-PROTOTYPE'
+    inputDataElements                = 'DATA-ELEMENTS'
     inputTypeReference               = 'TYPE-TREF'
     inputClientServerInterface       = 'CLIENT-SERVER-INTERFACE'
     inputOperation                   = 'OPERATIONS'

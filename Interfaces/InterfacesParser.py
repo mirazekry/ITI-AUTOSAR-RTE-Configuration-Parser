@@ -2,6 +2,7 @@ import sys
 sys.path.append('../')
 
 from InputPathes.Tag                        import Tag
+from InputPathes.InputPathes                import Inputs
 from DataTypes.BaseType                     import BaseType
 from Interfaces.Operation                              import Operation
 from Base.BaseParser                        import BaseParser
@@ -38,7 +39,8 @@ class InterfaceParser(BaseParser):
 
         for package in self.PackagesSource:
             ElementPackages[package],ElementPackagesID[package] = self.getPackageItem(self.arxmlInputFilePath,self.arxmlNamespace,package,previousTag = None)
-            
+    
+
         return ElementPackages,ElementPackagesID
 
     def getTypeRefID(self):
@@ -51,16 +53,16 @@ class InterfaceParser(BaseParser):
         CS_opArgument_TypeRef       = []
 
         ElementPackages , ElementPackagesID = self.getElementPackages()
-
+        
         if Tag.inputTypeReference in ElementPackages:
             TypeRefs.extend(ElementPackages[Tag.inputTypeReference])
 
-            for Item in ElementPackagesID[Tag.inputSenderRecieverInterface]:
+            for Item in ElementPackagesID[Tag.inputSRDataElement]:
                 if TypeRefs != []:
                     if type(TypeRefs[0]) == str:
                         SR_dataElement_TypeRef.append(TypeRefs.pop(0))
             
-            for Item in ElementPackagesID[Tag.inputClientServerInterface]:
+            for Item in ElementPackagesID[Tag.inputOpArgument]:
                 if TypeRefs != []:
                     if type(TypeRefs[0]) == str:
                         CS_opArgument_TypeRef.append(TypeRefs.pop(0))
@@ -91,12 +93,12 @@ class InterfaceParser(BaseParser):
         SR_dataElements                     = []
 
         ElementPackages,ElementPackagesID   = self.getElementPackages()
-
+        
         for item in ElementPackages[Tag.inputSenderRecieverInterface]:
             
-            numberOfDataElements    =   range(1)    # should loop on the number of dataElements in the interface must be configued
+            numberOfDataElements    =   self.getNumberOfSubItems(self.arxmlInputFilePath,self.arxmlNamespace,Tag.inputSenderRecieverInterface,Tag.inputDataElements)    
 
-            for DEnameIndex in numberOfDataElements:     
+            for Index in range(numberOfDataElements[item]):     
                 SR_dataElements.append(DataElement(ElementPackages[Tag.inputSRDataElement].pop(0),SR_dataElement_TypeRefID.pop(0)))
                     
             SenderRecieverInterfaces.append(SenderRecieverInterface(item,SR_dataElements))
@@ -118,15 +120,18 @@ class InterfaceParser(BaseParser):
         CS_operations             = []
 
         ElementPackages,ElementPackagesID   = self.getElementPackages()
-
+        
         for item in ElementPackages[Tag.inputClientServerInterface]:
 
-            numberOfOperation   =   range(1)    # should loop on the number of operaions in the interface must be configue
+            numberOfOperation   =   self.getNumberOfSubItems(self.arxmlInputFilePath,self.arxmlNamespace,Tag.inputClientServerInterface,Tag.inputOperation)
 
-            for CSoperation in numberOfOperation:
+            for op_Index in range(numberOfOperation[item]):
                 CS_operations.append(Operation(ElementPackages[Tag.inputCSOperation].pop(0)))
 
-                for Argument in range(1):   # should loop on the number of arguments in the operation must be configued
+                numberOfArguments   =   self.getNumberOfSubItems(self.arxmlInputFilePath,self.arxmlNamespace,Tag.inputCSOperation,Tag.inputArguments)
+                
+                for Arg_Index in range(numberOfArguments[CS_operations[-1].Name]):  
+                    
                     CS_operations[-1].addArgument(ElementPackages[Tag.inputOpArgument].pop(0),
                                                         CS_opArgument_TypeRefID.pop(0),ElementPackages[Tag.inputOpArgumentDirection].pop(0))
                     
@@ -143,18 +148,3 @@ class InterfaceParser(BaseParser):
 
 
 
-
-#x,y=InterfaceParser('DataTypesAndInterfaces.arxml').getClientServerInterfaces()
-"""
-print(x[Tag.inputSRDataElement])
-x[Tag.inputSRDataElement].pop(0)
-print(x[Tag.inputSRDataElement])
-"""
-"""for i in x:
-    print(i.Name , y[x.index(i)])
-    for e in i.Operations:
-        print(e.Name)
-        for s in e.Arguments:
-            print(s.Name,e.ArgumentsDirection[e.Arguments.index(s)])
-"""
-#print(x[0].Name,x[0].Data_Elements)

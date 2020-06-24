@@ -11,5 +11,5 @@ class DataElement(BaseElement):
     def __init__(self,Name = None , Implementation_Type_ID = None):
 
         super().__init__(Name)
-        if Implementation_Type_ID:
-            self.Implementation_Type_ID = Implementation_Type_ID
+        
+        self.Implementation_Type_ID = Implementation_Type_ID
