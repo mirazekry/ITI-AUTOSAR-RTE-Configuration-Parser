@@ -139,24 +139,73 @@ class BaseParser:
 
         return retPackages,retPackagesID
 
+    def getNumberOfSubItems(self,arxmlFilePath,arxmlfileNameSpace,ItemTag,SubItemsTag):
+
+        NumberOfSubItems    =   {}
+
+        if arxmlFilePath is None:
+            arxmlFilePath       = self.arxmlInputFilePath
+        if arxmlfileNameSpace is None:
+            arxmlfileNameSpace  = self.arxmlNamespace
+
+        items = ET.parse(arxmlFilePath).getroot()
+        count = 0
+
+        for item in items.iter():
+            if item.tag == arxmlfileNameSpace+ItemTag:
+                for subItem in item:
+                    if subItem.tag == arxmlfileNameSpace+Tag.inputShortName:
+                        ItemName = subItem.text
+                    if subItem.tag == arxmlfileNameSpace+SubItemsTag:
+                        for numberofSubItems in subItem:
+                            count += 1
+                NumberOfSubItems[ItemName]=count
+                count = 0
+        return NumberOfSubItems
+
+    def getSubElement(self,arxmlFilePath,arxmlfileNameSpace,SubElementTag):
+
+        SubElement  =   {}
+        Copy = []
+
+        if arxmlFilePath is None:
+            arxmlFilePath       = self.arxmlInputFilePath
+        if arxmlfileNameSpace is None:
+            arxmlfileNameSpace  = self.arxmlNamespace
+
+        items = ET.parse(arxmlFilePath).getroot()
+
+        for item in items.iter():
+
+            if item.tag == arxmlfileNameSpace+Tag.inputShortName:
+                ItemName    =   item.text
+            if item.tag == arxmlfileNameSpace + SubElementTag:
+                if '\n' in item.text:
+                    for subItem in item:
+                        if ItemName in SubElement:
+                            if type(SubElement[ItemName]) == list:
+                                Copy.extend(SubElement[ItemName])
+                            else:
+                                Copy.append(SubElement[ItemName])
+                            Copy.append(subItem.text)
+                            SubElement[ItemName]=Copy.copy()
+                            Copy.clear()
+                        else:
+                            SubElement[ItemName] = subItem.text
+                else:
+                    if ItemName in SubElement:
+                        if type(SubElement[ItemName]) == list:
+                            Copy.extend(SubElement[ItemName])
+                        else:
+                            Copy.append(SubElement[ItemName])
+                        Copy.append(item.text)
+                        SubElement[ItemName]=Copy.copy()
+                        Copy.clear()
+                    else:
+                        SubElement[ItemName] = item.text
+
+        return SubElement
 
 
 
 
-"""items = ET.parse('DataTypesAndInterfaces.arxml').getroot()
-x= items.iter()
-for i in x:
-    print(i.text,"\n")"""
-
-"""test=BaseParser(None,None,None,'DataTypesAndInterfaces.arxml')
-
-x,y = test.getPackages('DataTypesAndInterfaces.arxml')"""
-
-"""z ,w = test.getPackageItem('DataTypesAndInterfaces.arxml',None,'AR-PACKAGE',None)"""
-
-"""for i in x:
-    print(i,":",x[i])
-for j in y:
-    print(j,":",y[j])"""
-    
-"""print(z,w)"""

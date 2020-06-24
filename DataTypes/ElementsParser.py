@@ -83,37 +83,23 @@ class ElementParser(BaseParser):
     ElementPackages         = {}
     ElementPackagesID       = {}
 
-    ElementsCategory        = []
-    numberOf_subElements    = []
-    subElementsCategory     = []
-    subElements_counter     = 0
-
 
     ElementPackages , ElementPackagesID = self.getElementPackages()
-
-    # splitting the Elements and subElements Category
-    if Tag.inputTypeCategory                in ElementPackages:
-      for item in ElementPackages[Tag.inputTypeCategory]:
-        if item.isupper():
-          ElementsCategory.append(item)
-          numberOf_subElements.append(subElements_counter)
-          subElements_counter = 0
-        else:
-          subElementsCategory.append(item)
-          subElements_counter += 1
-      numberOf_subElements.pop(0)
-      numberOf_subElements.append(subElements_counter)
+    numberOf_subElements = self.getNumberOfSubItems(self.arxmlInputFilePath,self.arxmlNamespace,Tag.inputImplementationType,Tag.inputSubElements)
+    ElementsCategory = self.getSubElement(self.arxmlInputFilePath,self.arxmlNamespace,Tag.inputTypeCategory)
+    DataTypeReference = self.getSubElement(self.arxmlInputFilePath,self.arxmlNamespace,Tag.inputDataTypeRef)
 
     # looping on the list of inputImplementationType Ids
     for Item in ElementPackagesID[Tag.inputImplementationType]:
       name           = ElementPackages[Tag.inputImplementationType][Item]
-      category       = ElementsCategory[Item]
-      subEle_Size    = numberOf_subElements[Item]
-
-      if ElementPackages[Tag.inputBaseTypeReference] != []:
-        Type_Ref = ElementPackages[Tag.inputBaseTypeReference].pop(0)
+      category       = ElementsCategory[name]
+      subEle_Size    = numberOf_subElements[name]
+      
+      
+      if category == ImplementationDataType.value:
+        Type_Ref      = DataTypeReference[name]
       else:
-        Type_Ref = None
+        Type_Ref      = None
       
       # creating ImplementationDataType object for Element
       ImplementationDataTypes.append(ImplementationDataType(name,category,Type_Ref,subEle_Size))
@@ -123,16 +109,14 @@ class ElementParser(BaseParser):
         ImplementationDataTypes[Item].arraySizeSemantics = ElementPackages[Tag.inputArraySizeSemantics].pop(0)
 
       for subItem in range(subEle_Size):
-          name      = ElementPackages[Tag.inputImplementationTypeElement].pop(0)
-          category  = subElementsCategory.pop(0)
-          size      = None
-
-          
-          if ElementPackages[Tag.inputImplementationTypeReference] != []:
-            Type_Ref = ElementPackages[Tag.inputImplementationTypeReference].pop(0)
+          name           = ElementPackages[Tag.inputImplementationTypeElement].pop(0)
+          category       = ElementsCategory[name]
+          size           = None
+          if type(DataTypeReference[name]) == list:
+            Type_Ref       = DataTypeReference[name].pop(0)
           else:
-            Type_Ref = None
-          
+            Type_Ref       = DataTypeReference[name]
+            
           # adding subElement to the Element object
           ImplementationDataTypes[Item].addSubElements(name,category,Type_Ref,size)
 

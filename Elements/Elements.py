@@ -71,13 +71,4 @@ class Element:
 
    
 
-x=Element()
-x.update()
-
-for i in x.Application_SWC_Types:
-    print(i.Name)
-    for w in i.Ports:
-        print(w.Name)
-    for s  in i.InternalBehavoirs:
-        print(s.Name)
 
