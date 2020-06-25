@@ -47,6 +47,8 @@ class Tag:
     inputPossibleError               = 'POSSIBLE-ERRORS'
     '''Application software components Tags'''
     inputApplicationSWC              = 'APPLICATION-SW-COMPONENT-TYPE'
+    inputComplexDDSWC                = 'COMPLEX-DEVICE-DRIVER-SW-COMPONENT-TYPE'
+    inputServiceSWC                  = 'SERVICE-SW-COMPONENT-TYPE'
     inputRequiredPortPrototype       = 'R-PORT-PROTOTYPE'
     inputProviderPortPrototype       = 'P-PORT-PROTOTYPE'
     inputDataElementRef              = 'DATA-ELEMENT-REF'

@@ -9,7 +9,7 @@ from ApplicationSWC.Runnables                  import Runnable
 from Base.BaseParser                           import BaseParser
 from Interfaces.InterfacesParser               import InterfaceParser
 from ApplicationSWC.InternalBehavior           import InternalBehavior
-from ApplicationSWC.Application_SWC_Type       import Application_SWC
+from ApplicationSWC.SWC_Type                   import SWC
 from Interfaces.ClientServerInterface          import ClientServerInterface
 from Interfaces.SenderRecieverInterface        import SenderRecieverInterface
 
@@ -20,6 +20,8 @@ class ApplicationSWCparser(BaseParser):
 
     PackagesSource = [  Tag.inputInitEvent,
                         Tag.inputApplicationSWC,
+                        Tag.inputComplexDDSWC,
+                        Tag.inputServiceSWC,
                         Tag.inputRequiredPortPrototype,
                         Tag.inputProviderPortPrototype,
                         Tag.inputDataElementRef,
@@ -253,15 +255,31 @@ class ApplicationSWCparser(BaseParser):
         return InternalBehavior_List
 
 
-    def getApplicationSWC(self):
+    def getSWC(self):
 
-        Application_SWC_List    =   []
+        SWC_List    =   []
+        SWC_Name    =   None
+        SWC_Type    =   None
 
-        SWC_Name                =   self.getElementPackages()[0][Tag.inputApplicationSWC]
+        ElementPackages             =   self.getElementPackages()[0]
 
-        Application_SWC_List.append(Application_SWC(SWC_Name,self.getPorts()[0],self.getInternalBehavior()))
+        
+        if ElementPackages[Tag.inputApplicationSWC] != []:
+            SWC_Name                =   ElementPackages[Tag.inputApplicationSWC].pop(0)
+            SWC_Type                =   'Application SWC'
+        
+        elif ElementPackages[Tag.inputComplexDDSWC] != []:
+            SWC_Name                =   ElementPackages[Tag.inputComplexDDSWC].pop(0)
+            SWC_Type                =   'Complex Device Driver SWC'
+       
+        elif ElementPackages[Tag.inputServiceSWC] != []:
+            SWC_Name                =   ElementPackages[Tag.inputServiceSWC].pop(0)
+            SWC_Type                =   'Service SWC'
 
-        return Application_SWC_List
+
+        SWC_List.append(SWC(SWC_Name,SWC_Type,self.getPorts()[0],self.getInternalBehavior()))
+
+        return SWC_List
 
 
 

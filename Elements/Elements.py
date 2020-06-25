@@ -8,10 +8,10 @@ from Interfaces.DataElement                         import DataElement
 from DataTypes.ImplementationDataType               import ImplementationDataType
 from Interfaces.SenderRecieverInterface             import SenderRecieverInterface
 from Interfaces.ClientServerInterface               import ClientServerInterface
-from ApplicationSWC.Application_SWC_Type            import Application_SWC
+from ApplicationSWC.SWC_Type            import SWC
 from DataTypes.ElementsParser                       import ElementParser
 from Interfaces.InterfacesParser                    import InterfaceParser
-from ApplicationSWC.ApplicationSW_ComponentParser   import ApplicationSWCparser
+from ApplicationSWC.SW_ComponentParser              import ApplicationSWCparser
 
 ## Description : This class contains all the application ports, interfaces, BaseTypes and SWCs
 
@@ -58,7 +58,7 @@ class Element:
     def getApplicationSWCTypes(self):
 
         for SWC_filePath in self.Application_SWC_filePath: 
-            self.Application_SWC_Types.extend(ApplicationSWCparser(SWC_filePath).getApplicationSWC())
+            self.Application_SWC_Types.extend(ApplicationSWCparser(SWC_filePath).getSWC())
     
     
     def update(self):

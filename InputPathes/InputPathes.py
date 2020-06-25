@@ -12,4 +12,4 @@ class Inputs:
 
 
 
-Inputs(["./InputPathes/First_SWC.arxml"])
+Inputs(["./InputPathes/SWC3.arxml"])

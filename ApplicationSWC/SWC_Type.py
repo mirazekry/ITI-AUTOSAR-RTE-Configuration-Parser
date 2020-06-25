@@ -5,12 +5,12 @@ from Base.BaseElement import BaseElement
 
 # Description : This Class contains the Application SWC Type containers
 
-class Application_SWC(BaseElement):
+class SWC(BaseElement):
 
-    def __init__(self,Name = None,Ports_List = [],InternalBehavoirs = []):
+    def __init__(self,Name = None,Type = None,Ports_List = [],InternalBehavoirs = []):
 
         super().__init__(Name)
-
+        self.Type               =  Type
         self.Ports              =   []
         self.InternalBehavoirs  =   []
 
